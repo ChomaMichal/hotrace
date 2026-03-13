@@ -19,7 +19,7 @@ void read_all(t_mem_arena *arena) {
 
   while (1) {
     buff = arena_push(arena, 64 * KIB);
-    i = read(1, buff, 64 * KIB);
+    i = read(STDIN_FILENO, buff, 64 * KIB);
     if (buff[i] == 0) {
       break;
     }
