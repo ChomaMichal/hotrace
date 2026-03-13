@@ -58,16 +58,14 @@ int main(int ac, char **av) {
   if (arena == NULL) {
     return (write(2, "Arena creation failed", 1), 22);
   }
+  read_all(arena);
 
   // READ STDIN
-  read_all(arena, )
 
-      /* - SPLIT INPUT IN 2 PHASES:
-        1) key/value pairs
-        2) search queries
-      */
-
-      if (!pair_key_value(&data)) return (ERROR);
+  /* - SPLIT INPUT IN 2 PHASES:
+    1) key/value pairs
+    2) search queries
+  */
 
   /*
   PARSING
