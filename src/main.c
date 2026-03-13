@@ -6,11 +6,12 @@
 /*   By: rheidary <rheidary@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 10:28:16 by pjelinek          #+#    #+#             */
-/*   Updated: 2026/03/13 20:29:29 by rheidary         ###   ########.fr       */
+/*   Updated: 2026/03/13 23:17:53 by rheidary         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/hotrace.h"
+#include "../inc/hashmap.h"
 #include <linux/limits.h>
 
 void read_all(t_mem_arena *arena) {
@@ -20,7 +21,7 @@ void read_all(t_mem_arena *arena) {
   while (1) {
     buff = arena_push(arena, 64 * KIB);
     i = read(STDIN_FILENO, buff, 64 * KIB);
-    if (buff[i] == 0) {
+    if (buff[i -1] == 0) {
       break;
     }
     if (i != 64 * KIB)
@@ -44,24 +45,47 @@ char *get_next_element(t_mem_arena *arena) {
   this = last;
   while (*this != '\n')
     this++;
-  if (this == last)
-    return (NULL);
   this++;
+  last = this;
+  if (*last == '\n')
+    return (NULL);
   if (*this == 0)
     return (NULL);
-  last = this;
   return (this);
 }
 
 int main() {
-  t_mem_arena *arena;
-
-  arena = arena_create((size_t)8 * GIB);
+	t_mem_arena *arena;
+	t_hashmap	*hash_map;
+  arena = arena_create((size_t)8 * MIB);
   if (arena == NULL) {
     return (write(2, "Arena creation failed", 1), 22);
   }
   read_all(arena);
+  hash_map = init_hashmap(arena);
+  while (1)
+  {
+	// printf("I am here\n");
+	char *key = get_next_element(arena);
+	if (key == NULL)
+		break ;
+	char *value = get_next_element(arena);
+  	if (value == NULL)
+		break ;
+	insert(hash_map, key, value, arena);
+  }
+  while (1)
+  {
+	char *key = get_next_element(arena);
+	if (key == NULL){
+		break ;
+	}
+	char *value = find(hash_map, key);
+  printf("%s\n", value);
+  }
+  return (0);
 
+  
   // READ STDIN
 
   /* - SPLIT INPUT IN 2 PHASES:

@@ -27,11 +27,13 @@ void insert(t_hashmap *map, char *key, char *value, t_mem_arena *arena) {
     return;
   }
   idk = map[hash].next;
-  while (idk->next != NULL) {
-    idk = idk->next;
+  if (idk != NULL){
+
+    while (idk->next != NULL) {
+      idk = idk->next;
+    }
   }
-  idk->next = arena_push(arena, sizeof(t_hashmap));
-  idk = idk->next;
+  idk = arena_push(arena, sizeof(t_hashmap));
   idk->value = value;
   idk->key = key;
   idk->next = NULL;
