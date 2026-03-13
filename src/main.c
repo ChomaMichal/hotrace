@@ -17,14 +17,14 @@ void read_all(t_mem_arena *arena) {
   ssize_t i;
   char *buff;
 
-  i = 0;
   while (1) {
     buff = arena_push(arena, 64 * KIB);
     i = read(1, buff, 64 * KIB);
     if (buff[i] == 0) {
-
       break;
     }
+    if (i != 64 * KIB)
+      break;
   }
   if (i == -1) {
     exit(1); // error handle
