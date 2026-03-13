@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hotrace.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pjelinek <pjelinek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rheidary <rheidary@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 10:22:12 by pjelinek          #+#    #+#             */
-/*   Updated: 2026/03/13 17:13:10 by pjelinek         ###   ########.fr       */
+/*   Updated: 2026/03/13 20:25:09 by rheidary         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,37 @@
 #include "defines.h"
 #include "structs.h"
 
-void	*ft_calloc(size_t nmemb, size_t size);
+# define KIB 1024
+# define MIB 1048576
+# define GIB 1073741824
+
+typedef struct s_struct
+{
+	t_u64	capacity;
+	t_u64	pos;
+}	t_mem_arena;
+
+typedef int8_t					t_i8;
+typedef int16_t					t_i16;
+typedef int32_t					t_i32;
+typedef int64_t					t_i64;
+typedef uint8_t					t_u8;
+typedef uint16_t				t_u16;
+typedef uint32_t				t_u32;
+typedef uint64_t				t_u64;
+
+typedef t_i8					t_b8;
+typedef t_i32					t_b32;
+
+// ARENA
+t_mem_arena	*arena_create(t_u64 capacity);
+void		*arena_push(t_mem_arena *arena, t_u64 size);
+void		arena_pop(t_mem_arena *arena, t_u64 size);
+void		arena_pop_to(t_mem_arena *arena, t_u64 pos);
+void		arena_clear(t_mem_arena *arena);
+
 bool	pair_key_value(t_data *data);
+
+
 
 #endif /* HOTRACE_H */

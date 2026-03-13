@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pjelinek <pjelinek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rheidary <rheidary@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 10:28:16 by pjelinek          #+#    #+#             */
-/*   Updated: 2026/03/13 17:12:10 by pjelinek         ###   ########.fr       */
+/*   Updated: 2026/03/13 20:29:29 by rheidary         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,13 @@ int	main(int ac, char **av)
 		return (0);
 
 	t_data data;
+	t_mem_arena		*arena;
 
+	arena = arena_create(8 * GIB);
+	if (arena == NULL)
+	{
+		return (write(2, "Arena creation failed", 1), 22);
+	}
 
 	// READ STDIN
 	if (!read_chunks(&data.buf))
