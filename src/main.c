@@ -14,15 +14,17 @@
 #include <linux/limits.h>
 
 void read_all(t_mem_arena *arena) {
-  size_t i;
+  ssize_t i;
   char *buff;
 
   i = 0;
   while (1) {
     buff = arena_push(arena, 64 * KIB);
     i = read(1, buff, 64 * KIB);
-    if (i != 64 * KIB)
+    if (buff[i] == 0) {
+
       break;
+    }
   }
   if (i == -1) {
     exit(1); // error handle
@@ -51,10 +53,10 @@ char *get_next_element(t_mem_arena *arena) {
   return (this);
 }
 
-int main(int ac, char **av) {
+int main() {
   t_mem_arena *arena;
 
-  arena = arena_create(8 * GIB);
+  arena = arena_create((size_t)8 * GIB);
   if (arena == NULL) {
     return (write(2, "Arena creation failed", 1), 22);
   }

@@ -19,8 +19,9 @@ OBJ_DIR         = obj
 
 SRCS = \
 	main.c \
-	ft_calloc.c \
-	pair_key_value.c
+	hash_key.c\
+	hashmap.c \
+	arena.c
 
 
 	
