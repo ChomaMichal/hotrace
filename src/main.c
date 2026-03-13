@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/hotrace.h"
 #include "../inc/hashmap.h"
+#include "../inc/hotrace.h"
 #include <linux/limits.h>
 
 void read_all(t_mem_arena *arena) {
@@ -21,7 +21,7 @@ void read_all(t_mem_arena *arena) {
   while (1) {
     buff = arena_push(arena, 64 * KIB);
     i = read(STDIN_FILENO, buff, 64 * KIB);
-    if (buff[i -1] == 0) {
+    if (buff[i - 1] == 0) {
       break;
     }
     if (i != 64 * KIB)
@@ -32,6 +32,14 @@ void read_all(t_mem_arena *arena) {
   }
   buff[i] = 0;
   arena_pop_to(arena, (t_u64)buff + i);
+}
+
+size_t str_n_len(char *str) {
+  size_t i = 0;
+  while (str[i] != '\n') {
+    i++;
+  }
+  return (i);
 }
 
 char *get_next_element(t_mem_arena *arena) {
@@ -55,37 +63,34 @@ char *get_next_element(t_mem_arena *arena) {
 }
 
 int main() {
-	t_mem_arena *arena;
-	t_hashmap	*hash_map;
-  arena = arena_create((size_t)8 * MIB);
+  t_mem_arena *arena;
+  t_hashmap *hash_map;
+  arena = arena_create((size_t)8 * GIB);
   if (arena == NULL) {
     return (write(2, "Arena creation failed", 1), 22);
   }
   read_all(arena);
   hash_map = init_hashmap(arena);
-  while (1)
-  {
-	// printf("I am here\n");
-	char *key = get_next_element(arena);
-	if (key == NULL)
-		break ;
-	char *value = get_next_element(arena);
-  	if (value == NULL)
-		break ;
-	insert(hash_map, key, value, arena);
+  while (1) {
+    // printf("I am here\n");
+    char *key = get_next_element(arena);
+    if (key == NULL)
+      break;
+    char *value = get_next_element(arena);
+    if (value == NULL)
+      break;
+    insert(hash_map, key, value, arena);
   }
-  while (1)
-  {
-	char *key = get_next_element(arena);
-	if (key == NULL){
-		break ;
-	}
-	char *value = find(hash_map, key);
-  printf("%s\n", value);
+  while (1) {
+    char *key = get_next_element(arena);
+    if (key == NULL) {
+      break;
+    }
+    char *value = find(hash_map, key);
+    write(1, value, str_n_len(value) + 1);
   }
   return (0);
 
-  
   // READ STDIN
 
   /* - SPLIT INPUT IN 2 PHASES:
