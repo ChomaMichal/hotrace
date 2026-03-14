@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rheidary <rheidary@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: pjelinek <pjelinek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 10:28:16 by pjelinek          #+#    #+#             */
-/*   Updated: 2026/03/13 23:17:53 by rheidary         ###   ########.fr       */
+/*   Updated: 2026/03/14 12:52:47 by pjelinek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,39 +14,50 @@
 #include "../inc/hotrace.h"
 #include <linux/limits.h>
 
-void read_all(t_mem_arena *arena) {
+int read_all(t_mem_arena *arena)
+{
   ssize_t i;
   char *buff;
 
-  while (1) {
+  while (1)
+  {
     buff = arena_push(arena, 64 * KIB);
+	if (!buff)
+		return (1);
     i = read(STDIN_FILENO, buff, 64 * KIB);
-    if (buff[i - 1] == 0) {
-      break;
+    if (i > 0 && buff[i - 1] == 0) // ?????????????????
+	{
+    	break;
     }
     if (i != 64 * KIB)
       break;
   }
-  if (i == -1) {
-    exit(1); // error handle
+  if (i == -1)
+  {
+    return (1); // error handle
   }
   buff[i] = 0;
   arena_pop_to(arena, (t_u64)buff + i);
+  return (0);
 }
 
-size_t str_n_len(char *str) {
+size_t str_n_len(char *str)
+{
   size_t i = 0;
-  while (str[i] != '\n') {
+  while (str[i] != '\n')
+  {
     i++;
   }
   return (i);
 }
 
-char *get_next_element(t_mem_arena *arena) {
+char *get_next_element(t_mem_arena *arena)
+{
   static char *last = NULL;
   char *this;
 
-  if (last == NULL) {
+  if (last == NULL)
+  {
     last = (void *)arena + sizeof(t_mem_arena);
     return (last);
   }
@@ -62,16 +73,23 @@ char *get_next_element(t_mem_arena *arena) {
   return (this);
 }
 
-int main() {
+int main()
+{
   t_mem_arena *arena;
   t_hashmap *hash_map;
   arena = arena_create((size_t)8 * GIB);
-  if (arena == NULL) {
-    return (write(2, "Arena creation failed", 1), 22);
+  if (arena == NULL)
+  {
+    return (write(2, "Arena creation failed\n", 23), 1);
   }
-  read_all(arena);
+  if (read_all(arena))
+  	return (write(2, "ERROR\n", 6), 1);
+
+
+
   hash_map = init_hashmap(arena);
-  while (1) {
+  while (1)
+  {
     // printf("I am here\n");
     char *key = get_next_element(arena);
     if (key == NULL)
@@ -81,7 +99,11 @@ int main() {
       break;
     insert(hash_map, key, value, arena);
   }
-  while (1) {
+
+
+
+  while (1)
+  {
     char *key = get_next_element(arena);
     if (key == NULL) {
       break;

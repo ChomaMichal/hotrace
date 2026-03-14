@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   arena.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rheidary <rheidary@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: pjelinek <pjelinek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 20:09:18 by rheidary          #+#    #+#             */
-/*   Updated: 2026/03/13 20:24:55 by rheidary         ###   ########.fr       */
+/*   Updated: 2026/03/14 12:19:54 by pjelinek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/hotrace.h"
 
-t_mem_arena *arena_create(t_u64 capacity) {
+t_mem_arena *arena_create(t_u64 capacity)
+{
   t_mem_arena *arena;
 
   arena = (t_mem_arena *)malloc(capacity);
@@ -24,7 +25,8 @@ t_mem_arena *arena_create(t_u64 capacity) {
   return (arena);
 }
 
-void *arena_push(t_mem_arena *arena, t_u64 size) {
+void *arena_push(t_mem_arena *arena, t_u64 size)
+{
   t_u64 pos_aligned;
   t_u64 new_pos;
   t_u8 *out;
@@ -40,12 +42,13 @@ void *arena_push(t_mem_arena *arena, t_u64 size) {
   return (out);
 }
 
-void arena_pop(t_mem_arena *arena, t_u64 size) {
+void arena_pop(t_mem_arena *arena, t_u64 size)
+{
   t_u64 max_pop;
 
   max_pop = arena->pos - sizeof(t_mem_arena);
   if (size > max_pop)
-    size = max_pop;
+		size = max_pop;
   arena->pos -= size;
 }
 
