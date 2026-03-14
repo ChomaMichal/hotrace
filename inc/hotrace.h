@@ -6,7 +6,7 @@
 /*   By: pjelinek <pjelinek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 10:22:12 by pjelinek          #+#    #+#             */
-/*   Updated: 2026/03/14 18:57:43 by pjelinek         ###   ########.fr       */
+/*   Updated: 2026/03/14 19:08:38 by pjelinek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,6 @@ typedef uint64_t t_u64;
 
 typedef t_i8 t_b8;
 typedef t_i32 t_b32;
-
-typedef enum e_mode { BUILD, SEARCH } t_mode;
-
-typedef enum e_expect { KEY, VALUE } t_expect;
-
-typedef struct s_data {
-  t_mode mode;
-  t_expect expect;
-} t_data;
 
 typedef struct s_struct {
   t_u64 capacity;
