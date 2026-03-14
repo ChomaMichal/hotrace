@@ -6,7 +6,7 @@
 /*   By: pjelinek <pjelinek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 10:28:16 by pjelinek          #+#    #+#             */
-/*   Updated: 2026/03/14 15:25:23 by pjelinek         ###   ########.fr       */
+/*   Updated: 2026/03/14 18:57:52 by pjelinek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,59 @@
 #include "../inc/hotrace.h"
 #include <linux/limits.h>
 
-int read_all(t_mem_arena *arena)
+bool	create_dataset()
 {
-  ssize_t i;
-  char *buff;
+	int bytes;
+	int capacity = 65536;  //64KB
+	int used = 0;
+	char *buffer = malloc(capacity);
+	if (!buffer)
+		return (false);
 
-  while (1)
-  {
-    buff = arena_push(arena, 64 * KIB);
-	//FAILCHECK
-
-    i = read(STDIN_FILENO, buff, 64 * KIB);
-	// i = 0 --> buff[-1] !!
-    if (i > 0 && buff[i - 1] == 0)
+	while (1)
 	{
-      break;
-    }
-    if (i != 64 * KIB)
-      break;
-  }
-  if (i == -1)
-  {
-    return(1); // error handle
-  }
-  buff[i] = 0;
-  arena_pop_to(arena, (t_u64)buff + i);
-  return (0);
+		bytes = read(STDIN_FILENO, buffer + used, capacity - used);
+		if (bytes <= 0)
+		{
+			if (bytes < 0)
+				return (false);
+			break;
+		}
+		used = used + bytes;
+		if (used == capacity)
+		{
+			capacity *= 2;
+			buffer = realloc(buffer, capacity); ///implement arena extending here
+			if (!buffer)
+				return (false);
+		}
+	}
+	buffer[used] = 0;
+		//split_key_value
+
+
+	return (false);
+}
+
+static bool	read_chunks(void)
+{
+	bool	search_key;
+
+	search_key = false;
+	while (1)
+	{
+		if (!search_key)
+		{
+			search_key = create_dataset();
+			if (!search_key)
+				return (false);
+		}
+		if (search_key)
+		{
+			//implement search and print output
+		}
+	}
+	return (true);
 }
 
 size_t str_n_len(char *str)
@@ -84,6 +111,7 @@ int main()
 {
   t_mem_arena *arena;
   t_hashmap *hash_map;
+
   arena = arena_create((size_t)8 * GIB);
   if (arena == NULL)
   {
