@@ -4,11 +4,13 @@
 #define HASHMAP_SIZE 4096
 #include "hotrace.h"
 
-typedef struct s_hashmap {
+
+/* typedef struct s_hashmap
+{
   struct s_hashmap *next;
   char *value;
   char *key;
-} t_hashmap;
+} t_hashmap; */
 
 t_hashmap *init_hashmap(t_mem_arena *arena);
 void insert(t_hashmap *map, char *key, char *value, t_mem_arena *arena);

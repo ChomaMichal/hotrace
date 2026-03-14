@@ -6,7 +6,7 @@
 /*   By: pjelinek <pjelinek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 10:22:12 by pjelinek          #+#    #+#             */
-/*   Updated: 2026/03/14 14:37:43 by pjelinek         ###   ########.fr       */
+/*   Updated: 2026/03/14 21:19:03 by pjelinek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,36 @@ typedef uint64_t t_u64;
 typedef t_i8 t_b8;
 typedef t_i32 t_b32;
 
+typedef enum e_mode { BUILD, SEARCH } t_mode;
+
+typedef enum e_expect { KEY, VALUE } t_expect;
+
+typedef struct s_state
+{
+	t_mode mode;
+	t_expect expect;
+}	t_state;
+
+typedef struct s_data
+{
+  long cap;
+  long used;
+  char *buff;
+  ssize_t bytes;
+} t_data;
+
+typedef struct s_entry
+{
+	char *key;
+	char *value;
+} t_entry;
+
+typedef struct s_hashmap
+{
+	t_entry table;
+	long	size;
+} t_hashmap;
+
 typedef struct s_struct {
   t_u64 capacity;
   t_u64 pos;
@@ -50,5 +80,7 @@ void *arena_push(t_mem_arena *arena, t_u64 size);
 void arena_pop(t_mem_arena *arena, t_u64 size);
 void arena_pop_to(t_mem_arena *arena, t_u64 pos);
 void arena_clear(t_mem_arena *arena);
+
+#include "hashmap.h"
 
 #endif /* HOTRACE_H */

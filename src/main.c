@@ -6,7 +6,7 @@
 /*   By: pjelinek <pjelinek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 10:28:16 by pjelinek          #+#    #+#             */
-/*   Updated: 2026/03/14 15:25:23 by pjelinek         ###   ########.fr       */
+/*   Updated: 2026/03/14 21:16:48 by pjelinek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,75 @@
 #include "../inc/hotrace.h"
 #include <linux/limits.h>
 
-int read_all(t_mem_arena *arena)
+void	parse_chunks(t_state *state, t_data *data)
 {
-  ssize_t i;
-  char *buff;
+	int i;
+	int len;
 
-  while (1)
-  {
-    buff = arena_push(arena, 64 * KIB);
-	//FAILCHECK
+	i = 0;
 
-    i = read(STDIN_FILENO, buff, 64 * KIB);
-	// i = 0 --> buff[-1] !!
-    if (i > 0 && buff[i - 1] == 0)
+	if (data->used == 0)
+		len = data->bytes;
+	else
+	 	len = data->used - data->bytes;
+	while (i < len)
 	{
-      break;
-    }
-    if (i != 64 * KIB)
-      break;
-  }
-  if (i == -1)
-  {
-    return(1); // error handle
-  }
-  buff[i] = 0;
-  arena_pop_to(arena, (t_u64)buff + i);
-  return (0);
+		if (state->expect == KEY)
+			
+		if (state->expect == VALUE)
+
+	}
+	return ;
 }
+
+static bool	read_chunks(t_data *data, t_state *state)
+{
+	data->cap = 65536;  //64KB
+	data->used = 0;
+	data->buff = malloc(data->cap);
+	if (!data->buff)
+		return (false);
+	while (1)
+	{
+		data->bytes = read(0, data->buff + data->used, data->cap - data->used);
+		if (data->bytes <= 0)
+		{
+			if (data->bytes < 0)
+				return (false);
+			break;
+		}
+		data->used = data->used + data->bytes;
+		parse_chunks(state, data);
+		if (data->used == data->cap)
+		{
+			data->cap *= 2;
+			data->buff = realloc(data->buff, data->cap); ///realloc self implementen with calloc
+			if (!data->buff)
+				return (false);
+		}
+	}
+	return (true);
+}
+void	get_input(void)
+{
+	t_data data;
+	t_state	state;
+
+	state.mode = BUILD;
+	state.expect = KEY;
+
+	while (1)
+	{
+		if (state.mode == BUILD)
+			read_chunks(&data, &state);
+		if (state.mode == SEARCH)
+			return ;
+
+	}
+	return ;
+}
+
+
 
 size_t str_n_len(char *str)
 {
@@ -82,43 +124,46 @@ void print_not_found(char *key)
 
 int main()
 {
-  t_mem_arena *arena;
-  t_hashmap *hash_map;
-  arena = arena_create((size_t)8 * GIB);
-  if (arena == NULL)
-  {
-    return (write(2, "Arena creation failed", 1), 22);
-  }
-  if (read_all(arena))
-  	return (1);
-  hash_map = init_hashmap(arena);
-  //FAILCHECK
-  while (1)
-  {
-    char *key = get_next_element(arena);
-    if (key == NULL)
-      break;
-    char *value = get_next_element(arena);
-    if (value == NULL)
-      break;
-    insert(hash_map, key, value, arena);
-	//FAILCHECK
-  }
-  while (1)
-  {
-    char *key = get_next_element(arena);
-    if (key == NULL)
+	t_mem_arena *arena;
+	t_hashmap *hash_map;
+
+
+
+/* 	arena = arena_create((size_t)8 * GIB);
+	if (arena == NULL)
 	{
-      break;
-    }
-    char *value = find(hash_map, key);
-    if (value != NULL)
-      write(1, value, str_n_len(value) + 1);
-    else
-      print_not_found(key);
-  }
-  free(arena);
-  return (0);
+	  return (write(2, "Arena creation failed", 1), 22);
+	} */
+	if (get_input(arena))
+		return (1);
+	hash_map = init_hashmap(arena);
+	//FAILCHECK
+	while (1)
+	{
+    	char *key = get_next_element(arena);
+    	if (key == NULL)
+    	  break;
+    	char *value = get_next_element(arena);
+    	if (value == NULL)
+    	  break;
+    	insert(hash_map, key, value, arena);
+		//FAILCHECK
+  	}
+  	while (1)
+  	{
+    	char *key = get_next_element(arena);
+    	if (key == NULL)
+		{
+    	  break;
+    	}
+    	char *value = find(hash_map, key);
+    	if (value != NULL)
+    	  write(1, value, str_n_len(value) + 1);
+    	else
+    	  print_not_found(key);
+	}
+  	free(arena);
+
 
   // READ STDIN
 
