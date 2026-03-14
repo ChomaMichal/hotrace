@@ -26,14 +26,12 @@ void insert(t_hashmap *map, char *key, char *value, t_mem_arena *arena) {
     map[hash].next = NULL;
     return;
   }
-  idk = map[hash].next;
-  if (idk != NULL){
-
-    while (idk->next != NULL) {
-      idk = idk->next;
-    }
+  idk = &map[hash];
+  while (idk->next != NULL) {
+    idk = idk->next;
   }
-  idk = arena_push(arena, sizeof(t_hashmap));
+  idk->next = arena_push(arena, sizeof(t_hashmap));
+  idk = idk->next;
   idk->value = value;
   idk->key = key;
   idk->next = NULL;
@@ -43,9 +41,10 @@ static bool str_cmp_cust(char *s1, char *s2) {
   size_t i;
 
   i = 0;
-  while (s1[i] == s2[2]) {
+  while (s1[i] == s2[i]) {
     if (s1[i] == '\n')
       return true;
+    i++;
   }
   return false;
 }
@@ -69,6 +68,7 @@ char *find(t_hashmap *map, char *key) {
     if (str_cmp_cust(key, idk->key)) {
       return (idk->value);
     }
+    idk = idk->next;
   }
   return (NULL);
 }
