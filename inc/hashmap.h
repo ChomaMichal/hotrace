@@ -1,7 +1,7 @@
 #ifndef HASHMAP_H
 #define HASHMAP_H
 
-#define HASHMAP_SIZE 1024
+#define HASHMAP_SIZE 1048576
 #include "hotrace.h"
 
 typedef struct s_hashmap {
