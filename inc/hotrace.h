@@ -6,7 +6,11 @@
 /*   By: pjelinek <pjelinek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 10:22:12 by pjelinek          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2026/03/14 12:15:43 by pjelinek         ###   ########.fr       */
+=======
+/*   Updated: 2026/03/14 14:37:43 by pjelinek         ###   ########.fr       */
+>>>>>>> main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +24,8 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "defines.h"
-#include "structs.h"
+// #include "defines.h"
+// #include "structs.h"
 
 #define KIB 1024
 #define MIB 1048576
@@ -50,7 +54,5 @@ void *arena_push(t_mem_arena *arena, t_u64 size);
 void arena_pop(t_mem_arena *arena, t_u64 size);
 void arena_pop_to(t_mem_arena *arena, t_u64 pos);
 void arena_clear(t_mem_arena *arena);
-
-bool pair_key_value(t_data *data);
 
 #endif /* HOTRACE_H */

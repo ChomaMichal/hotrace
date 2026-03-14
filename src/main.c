@@ -73,8 +73,17 @@ char *get_next_element(t_mem_arena *arena)
   return (this);
 }
 
+<<<<<<< HEAD
 int main()
 {
+=======
+void print_not_found(char *key) {
+  write(1, key, str_n_len(key));
+  write(1, ": Not found\n", 12);
+}
+
+int main() {
+>>>>>>> main
   t_mem_arena *arena;
   t_hashmap *hash_map;
   arena = arena_create((size_t)8 * GIB);
@@ -109,8 +118,12 @@ int main()
       break;
     }
     char *value = find(hash_map, key);
-    write(1, value, str_n_len(value) + 1);
+    if (value != NULL)
+      write(1, value, str_n_len(value) + 1);
+    else
+      print_not_found(key);
   }
+  free(arena);
   return (0);
 
   // READ STDIN
