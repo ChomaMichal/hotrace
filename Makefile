@@ -21,10 +21,11 @@ SRCS = \
 	main.c \
 	hash_key.c\
 	hashmap.c \
-	arena.c
+	arena.c \
+	write_output.c
 
 
-	
+
 # =========================
 # Objects / Deps
 # =========================

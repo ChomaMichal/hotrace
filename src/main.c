@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rheidary <rheidary@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: pjelinek <pjelinek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 10:28:16 by pjelinek          #+#    #+#             */
-/*   Updated: 2026/03/14 21:18:54 by rheidary         ###   ########.fr       */
+/*   Updated: 2026/03/14 22:32:44 by pjelinek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int read_all(t_mem_arena *arena) {
 		// printf("Buff : %p\n", buff);
 		// printf("Buff  == arena + 16 : %i\n", (t_u64)buff == (t_u64)arena + 16);
 		// printf("Arena->pos %lu\n", arena->pos);
-		
+
 		i = read(STDIN_FILENO, buff, 64 * KIB);
 		arena_pop_to_pointer(arena, buff + 5);
 		// printf("i = %lu\n", i);
@@ -130,6 +130,8 @@ int file_io(t_mem_arena *arena) {
 
 	hash_map = init_hashmap(arena);
 	// FAILCHECK
+
+	///
 	while (1) {
 		char *key = get_next_element(arena);
 		if (key == NULL)
@@ -140,17 +142,32 @@ int file_io(t_mem_arena *arena) {
 		insert(hash_map, key, value, arena);
 		// FAILCHECK
 	}
-	while (1) {
+	///SEARCH
+	char *buffer = arena_push(arena, 1024 * KIB);
+	if (!buffer)
+		return (1);
+
+	size_t  used;
+	used = 0;
+	while (1)
+	{
 		char *key = get_next_element(arena);
 		if (key == NULL) {
 			break;
 		}
 		char *value = find(hash_map, key);
-		if (value != NULL)
-			write(1, value, str_n_len(value) + 1);
-		else
-			print_not_found(key);
+		int status = write_in_buffer(value, key, buffer, &used);
+		if (status == MEMORY_FULL)
+		{
+			write(1, buffer, used);
+			used = 0;
+			arena_pop_to_pointer(arena, buffer);
+			buffer = arena_push(arena, 1024 * KIB);
+			if (!buffer)
+				return (1);
+		}
 	}
+	write(1, buffer, used);
 	free(arena);
 	return (0);
 }
