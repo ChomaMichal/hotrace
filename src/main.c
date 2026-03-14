@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rheidary <rheidary@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: pjelinek <pjelinek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 10:28:16 by pjelinek          #+#    #+#             */
-/*   Updated: 2026/03/14 21:41:22 by rheidary         ###   ########.fr       */
+/*   Updated: 2026/03/14 22:56:57 by pjelinek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,17 +173,30 @@ int file_io(t_mem_arena *arena) {
     return (0);
   }
 
+	char *buffer = arena_push(arena, 1024 * KIB);
+	if (!buffer)
+		return (1);
+	size_t  used;
+	used = 0;
+
   while (1) {
     key = get_next_element_can_be_nl(key);
     if (key == NULL || end == 1) {
       break;
     }
     value = find(hash_map, key);
-    if (value != NULL)
-      write(1, value, str_n_len(value) + 1);
-    else
-      print_not_found(key);
+   	int status = write_in_buffer(value, key, buffer, &used);
+	if (status == MEMORY_FULL)
+	{
+		write(1, buffer, used);
+		used = 0;
+		arena_pop_to_pointer(arena, buffer);
+		buffer = arena_push(arena, 1024 * KIB);
+		if (!buffer)
+			return (1);
+	}
   }
+  write(1, buffer, used);
   free(arena);
   return (0);
 }

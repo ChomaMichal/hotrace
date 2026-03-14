@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hotrace.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rheidary <rheidary@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: pjelinek <pjelinek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 10:22:12 by pjelinek          #+#    #+#             */
-/*   Updated: 2026/03/14 20:41:48 by rheidary         ###   ########.fr       */
+/*   Updated: 2026/03/14 22:54:56 by pjelinek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 #define KIB 1024
 #define MIB 1048576
 #define GIB 1073741824
+#define MEMORY_FULL 3
+#define ERROR 1
 
 typedef int8_t t_i8;
 typedef int16_t t_i16;
@@ -53,5 +55,7 @@ void arena_pop(t_mem_arena *arena, t_u64 size);
 void arena_pop_to(t_mem_arena *arena, t_u64 pos);
 void arena_clear(t_mem_arena *arena);
 void  arena_pop_to_pointer(t_mem_arena *arena, void *mem);
+size_t str_n_len(char *str);
+int	write_in_buffer(char *value, char *key, char *buffer, size_t *used);
 
 #endif /* HOTRACE_H */
