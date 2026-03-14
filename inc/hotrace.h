@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hotrace.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pjelinek <pjelinek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rheidary <rheidary@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 10:22:12 by pjelinek          #+#    #+#             */
-/*   Updated: 2026/03/14 19:08:38 by pjelinek         ###   ########.fr       */
+/*   Updated: 2026/03/14 20:41:48 by rheidary         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ typedef int64_t t_i64;
 typedef uint8_t t_u8;
 typedef uint16_t t_u16;
 typedef uint32_t t_u32;
-typedef uint64_t t_u64;
+typedef size_t t_u64;
 
 typedef t_i8 t_b8;
 typedef t_i32 t_b32;
@@ -48,8 +48,10 @@ typedef struct s_struct {
 // ARENA
 t_mem_arena *arena_create(t_u64 capacity);
 void *arena_push(t_mem_arena *arena, t_u64 size);
+void *arena_push_unaligned(t_mem_arena *arena, t_u64 size);
 void arena_pop(t_mem_arena *arena, t_u64 size);
 void arena_pop_to(t_mem_arena *arena, t_u64 pos);
 void arena_clear(t_mem_arena *arena);
+void  arena_pop_to_pointer(t_mem_arena *arena, void *mem);
 
 #endif /* HOTRACE_H */
