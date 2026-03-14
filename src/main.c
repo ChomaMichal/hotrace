@@ -6,7 +6,7 @@
 /*   By: rheidary <rheidary@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 10:28:16 by pjelinek          #+#    #+#             */
-/*   Updated: 2026/03/14 21:18:54 by rheidary         ###   ########.fr       */
+/*   Updated: 2026/03/14 21:41:22 by rheidary         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int read_all(t_mem_arena *arena) {
 		// printf("Arena->pos %lu\n", arena->pos);
 		
 		i = read(STDIN_FILENO, buff, 64 * KIB);
-		arena_pop_to_pointer(arena, buff + 5);
+		arena_pop_to_pointer(arena, buff + i);
 		// printf("i = %lu\n", i);
 		// printf("Buff= %p\n", buff);
 		// printf("Arena->pos 2 %lu\n", arena->pos);
@@ -52,19 +52,23 @@ int read_all(t_mem_arena *arena) {
 char *read_one(t_mem_arena *arena) {
 	ssize_t i;
 	char *buff;
+	char *begin;
 	ssize_t counter;
-
+	
+	buff = arena_push_unaligned(arena, 64 * KIB);
+	begin = buff;
 	while (1) {
-		buff = arena_push(arena, 64 * KIB);
 		// FAILCHECK
-		i = read(STDIN_FILENO, buff, 64 * KIB);
+		i = read(STDIN_FILENO, buff, 64 * KIB - 1);
 		// i = 0 --> buff[-1] !!
-
+		buff[i] = 0;
 		counter = 0;
 		while (counter < i) {
-			if (buff[counter] == '\n' || buff[counter] == '\0') {
-				return (buff[i] = 0, arena_pop_to_pointer(arena, (void *)buff + i), buff);
+			if (buff[counter] == '\n') {
+				return (arena_pop_to_pointer(arena, (void *)buff + i), buff);
 			}
+			if (buff[counter] == 0)
+				break;
 			counter++;
 		};
 		if (i == -1) {
@@ -74,6 +78,7 @@ char *read_one(t_mem_arena *arena) {
 			return (NULL);
 		}
 		arena_pop_to_pointer(arena, (void*)buff + i);
+	buff = arena_push_unaligned(arena, 64 * KIB);
 	}
 	return (buff);
 }
@@ -163,23 +168,26 @@ int user_io(t_mem_arena *arena) {
 	// FAILCHECK
 	while (1) {
 		char *key = get_next_element(arena);
-		// printf("key ==\n%s ==\n", key);
+		 //printf("key ==\n%s ==\n", key);
 
 		if (key == NULL)
 			break;
 		char *value = get_next_element(arena);
-		// printf("value ==\n%s ==\n", value);
+		 //printf("value ==\n%s ==\n", value);
 		if (value == NULL)
 			break;
 		insert(hash_map, key, value, arena);
 		// FAILCHECK
 	}
+	//printf("searching\n");
 	key = read_one(arena);
 	while (1) {
 		if (key == NULL) {
 			break;
 		}
+		//printf("key ===\n%s===\n", key);
 		char *value = find(hash_map, key);
+		//printf("value ===\n%s===\n", value);
 		if (value != NULL)
 			write(1, value, str_n_len(value) + 1);
 		else

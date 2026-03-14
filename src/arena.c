@@ -6,7 +6,7 @@
 /*   By: rheidary <rheidary@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 20:09:18 by rheidary          #+#    #+#             */
-/*   Updated: 2026/03/14 21:07:20 by rheidary         ###   ########.fr       */
+/*   Updated: 2026/03/14 21:28:40 by rheidary         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,5 @@ void arena_clear(t_mem_arena *arena) { arena_pop_to(arena, sizeof(void *)); }
 
 void  arena_pop_to_pointer(t_mem_arena *arena, void *mem)
 {
-	// printf("%p mem\n%p arena\n", mem, arena);
 	arena->pos = (t_u64)mem - (t_u64)arena;
 }
