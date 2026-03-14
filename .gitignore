@@ -1,0 +1,9 @@
+.vscode
+docs/
+.obj/
+obj/
+hotrace.pdf
+hotrace
+*.o
+*a
+.venv
